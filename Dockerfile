@@ -1,11 +1,10 @@
-FROM python:3.10.8-slim-buster
+FROM python:3.10-slim-bullseye
 
 #Dont Remove My Credit @AV_BOTz_UPDATE 
 #This Repo Is By @BOT_OWNER26 
 # For Any Kind Of Error Ask Us In Support Group @AV_SUPPORT_GROUP
 
-RUN apt update && apt upgrade -y
-RUN apt install git -y
+RUN apt-get update && apt-get upgrade -y && apt-get install -y git
 COPY requirements.txt /requirements.txt
 
 #Dont Remove My Credit @AV_BOTz_UPDATE 
