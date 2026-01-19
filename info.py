@@ -1,5 +1,8 @@
 import re
 from os import environ, getenv
+from dotenv import load_dotenv
+
+load_dotenv()
 from typing import Set, Optional, List, Dict
 from Script import script  # Custom script file with caption & other settings
 
@@ -90,4 +93,4 @@ BIND_ADDRESS = getenv("WEB_SERVER_BIND_ADDRESS", "127.0.0.1")  # Server bind add
 FQDN = getenv("FQDN", "") or BIND_ADDRESS  # Full domain name or fallback to bind address
 PORT_SEGMENT = "" if NO_PORT else f":{PORT}/"  # Port in URL if not disabled
 PROTOCOL = "https" if HAS_SSL else "http"  # Protocol for URL
-URL = f"{PROTOCOL}://{FQDN}{PORT_SEGMENT}"  # Final generated base URL
+URL = environ.get('URL') or environ.get('RENDER_EXTERNAL_URL') or f"{PROTOCOL}://{FQDN}{PORT_SEGMENT}"  # Final generated base URL

@@ -124,12 +124,17 @@ premium_user      - List all premium users [FOR ADMINS ONLY]
 
 <details><summary>📦 Tap On Me For Deployment</summary>
 
-### 🔹 DEPLOY ON RENDER
+### **Deploy on Render (Recommended)**
 
-<p><br>
-<a href="https://render.com/deploy?repo=https://github.com/Botsthe/AV-FILE-TO-LINK-PRO">
-<img src="https://render.com/images/deploy-to-render-button.svg" alt="DEPLOY ON RENDER">
-</a></p>
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Botsthe/AV-FILE-TO-LINK-PRO)
+
+**Steps:**
+1. Click the button above
+2. Connect your GitHub account
+3. Set environment variables (see `.env.example`)
+4. **Note:** The bot automatically detects your Render URL via `RENDER_EXTERNAL_URL`.
+5. Click "Create Web Service"
+6. Wait for deployment (~5 minutes)
 
 ---
 

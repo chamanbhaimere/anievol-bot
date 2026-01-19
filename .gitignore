@@ -1,0 +1,14 @@
+# Python secrets
+.env
+*.session
+*.session-journal
+
+# Python builds
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# OS files
+.DS_Store
