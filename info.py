@@ -6,6 +6,12 @@ load_dotenv()
 from typing import Set, Optional, List, Dict
 from Script import script  # Custom script file with caption & other settings
 
+def get_bool(key: str, default: bool) -> bool:
+    value = environ.get(key)
+    if value is None:
+        return default
+    return str(value).lower() in ("true", "1", "yes")
+
 # 🚀 Bot Session and Token Information
 SESSION = environ.get('SESSION', 'Webavbot')  # Pyrogram client session name
 
@@ -35,15 +41,15 @@ HOW_TO_VERIFY = environ.get('HOW_TO_VERIFY', 'https://t.me/')  # Verification gu
 HOW_TO_OPEN = environ.get('HOW_TO_OPEN', 'https://t.me/')  # File access guide link
 
 # ✅ Feature Toggles (True/False)
-VERIFY = environ.get("VERIFY", False)  # Enable user verification
-FSUB = environ.get("FSUB", True)  # Force Subscribe feature
-ENABLE_LIMIT = environ.get("ENABLE_LIMIT", True)  # Enable file limits
-BATCH_VERIFY = environ.get("BATCH_VERIFY", False)  # Verify files in batch
-IS_SHORTLINK = bool(environ.get('IS_SHORTLINK', False))  # Enable channel shortlink creation
-MAINTENANCE_MODE = environ.get("MAINTENANCE_MODE", False)  # Put bot in maintenance
-PROTECT_CONTENT = environ.get('PROTECT_CONTENT', False)  # Enable content protection
-PUBLIC_FILE_STORE = environ.get('PUBLIC_FILE_STORE', True)  # Public or private file visibility
-BATCH_PROTECT_CONTENT = environ.get('BATCH_PROTECT_CONTENT', False)  # Batch file protection
+VERIFY = get_bool("VERIFY", False)  # Enable user verification
+FSUB = get_bool("FSUB", True)  # Force Subscribe feature
+ENABLE_LIMIT = get_bool("ENABLE_LIMIT", True)  # Enable file limits
+BATCH_VERIFY = get_bool("BATCH_VERIFY", False)  # Verify files in batch
+IS_SHORTLINK = get_bool('IS_SHORTLINK', False)  # Enable channel shortlink creation
+MAINTENANCE_MODE = get_bool("MAINTENANCE_MODE", False)  # Put bot in maintenance
+PROTECT_CONTENT = get_bool('PROTECT_CONTENT', False)  # Enable content protection
+PUBLIC_FILE_STORE = get_bool('PUBLIC_FILE_STORE', True)  # Public or private file visibility
+BATCH_PROTECT_CONTENT = get_bool('BATCH_PROTECT_CONTENT', False)  # Batch file protection
 
 # 🔗 Shortlink Configuration
 SHORTLINK_URL = environ.get('SHORTLINK_URL', 'techvjlink.site')  # Shortener site
