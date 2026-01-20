@@ -13,91 +13,198 @@
   <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://av-bo-tz.vercel.app/548/551/play.css" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .premium-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    }
+    .premium-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    video {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 12px;
+      background: #000;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .btn-premium {
+      padding: 15px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .btn-premium:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .btn-mx { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .btn-vlc { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; }
+    .btn-play { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: white; }
+    .btn-download { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); color: white; }
+    .btn-telegram { background: linear-gradient(135deg, #0088cc 0%, #0077b5 100%); color: white; }
+    .btn-share { background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%); color: white; }
+    
+    .file-info-card {
+      background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .file-info-card h3 { 
+      margin-bottom: 15px; 
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    .file-info-card p { 
+      color: #a0aec0; 
+      margin: 8px 0;
+      font-size: 0.95rem;
+    }
+    .disclaimer-card {
+      background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+      padding: 20px;
+      border-radius: 12px;
+      color: #1a202c;
+      box-shadow: 0 4px 16px rgba(246, 173, 85, 0.3);
+    }
+    .disclaimer-card h6 {
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .report-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #1a202c;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .report-btn:hover {
+      background: #2d3748;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    @media (max-width: 768px) {
+      .premium-header h1 { font-size: 1.5rem; }
+      .buttons-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 
-<body class="bg-dark text-light">
+<body>
   <div class="d-flex flex-column min-vh-100">
-    <!-- Header -->
-    <header class="bg-primary text-white py-2 shadow" style="background-color: {{ colours.header.background }} !important; color: {{ colours.header.color }} !important;">
-      <div class="d-flex justify-content-between align-items-center container">
-        <h1 class="h4 mb-0 fw-bold">{{template_ne}}</h1>
-        <button id="theme-toggle-btn" class="btn btn-light theme-toggle-btn">
-          <i class="fa-solid fa-sun"></i> Light Mode
-        </button>
-      </div>
+    <!-- Premium Header -->
+    <header class="premium-header">
+      <h1>🎬 {{template_ne}}</h1>
     </header>
     
     <!-- Main content -->
-    <main class="flex-grow-1 container py-3">
-      <div class="player-wrapper mb-3">
-        <video id="myVideo" src="{{file_url}}" class="w-100" controls>
+    <main class="flex-grow-1 container">
+      <!-- Video Player -->
+      <div class="player-wrapper">
+        <video id="myVideo" src="{{file_url}}" controls crossorigin="anonymous">
           Your browser does not support the video tag.
         </video>
         <script src="https://cdn.plyr.io/3.6.12/plyr.js"></script>
       </div>
       
-      <div class="d-flex justify-content-between mb-2 flex-wrap gap-2">
-        <a onclick="mx_player()" class="btn btn-primary flex-fill" style="border: none; background-color: {{ colours.mx_player.background }}; color: {{ colours.mx_player.color }};">
-          <i class="fa fa-play"></i> <b>MX Player</b>
+      <!-- Player Selection Buttons -->
+      <div class="buttons-grid">
+        <a onclick="mx_player()" class="btn-premium btn-mx">
+          <i class="fa fa-play"></i> MX Player
         </a>
-        <a onclick="vlc_player()" class="btn btn-primary flex-fill" style="border: none; background-color: {{ colours.vlc_player.background }}; color: {{ colours.vlc_player.color }};">
-          <i class="fa fa-play"></i> <b>VLC Player</b>
+        <a onclick="vlc_player()" class="btn-premium btn-vlc">
+          <i class="fa fa-play"></i> VLC Player
         </a>
-        <a onclick="playit_player()" class="btn btn-primary flex-fill" style="border: none; background-color: {{ colours.playit_player.background }}; color: {{ colours.playit_player.color }};">
-          <i class="fa fa-play"></i> <b>Play it</b>
+        <a onclick="playit_player()" class="btn-premium btn-play">
+          <i class="fa fa-play"></i> Play It
         </a>
       </div>
       
-      <div class="row g-3 mb-2">
-        <div class="col-md-6">
-          <a onclick="streamDownload()" class="btn btn-success w-100" style="border: none; background-color: {{ colours.download.background }}; color: {{ colours.download.color }};">
-            <i class="fa-solid fa-download me-2"></i> Download
-          </a>
-        </div>
+      <!-- Download & Share Buttons -->
+      <div class="buttons-grid">
+        <a onclick="streamDownload()" class="btn-premium btn-download">
+          <i class="fa-solid fa-download"></i> Download
+        </a>
+        <a onclick="shareButton()" class="btn-premium btn-share">
+          <i class="fa fa-share-alt"></i> Share Now
+        </a>
       </div>
       
-      <a id="demo4" onclick="showLinkModal('{{tg_button}}')" class="btn btn-warning w-100 mb-2" style="border: none; background-color: {{ colours.create_link.background }}; color: {{ colours.create_link.color }};">
-        <i class="fa-brands fa-telegram"></i> Create Like This Link
+      <!-- Telegram Button -->
+      <a id="demo4" onclick="showLinkModal('{{tg_button}}')" class="btn-premium btn-telegram w-100 mb-3">
+        <i class="fa-brands fa-telegram"></i> Create Link Like This
       </a>
       
-      <a onclick="shareButton()" class="btn btn-danger w-100 mb-3" style="border: none; background-color: {{ colours.share.background }}; color: {{ colours.share.color }};">
-        <i class="fa fa-share-alt"></i> Share Now
-      </a>
-      
-      <div class="card bg-dark text-light border-secondary mb-4" style="background-color: {{ colours.file_information.background }}  !important; color: {{ colours.file_information.color }}  !important;">
-        <div class="card-header border-secondary">
-          <h5 class="mb-0"><i class="fa-solid fa-circle-info me-2"></i> File Information</h5>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6">
-              <p><strong>Name: </strong>{{file_name}}</p>
-              <p><strong>Size: </strong>{{file_size}}</p>
-            </div>
-          </div>
-        </div>
+      <!-- File Information -->
+      <div class="file-info-card">
+        <h3><i class="fa-solid fa-circle-info me-2"></i> File Information</h3>
+        <p><strong>Name:</strong> {{file_name}}</p>
+        <p><strong>Size:</strong> {{file_size}}</p>
+        <p><strong>Type:</strong> Video File</p>
       </div>
       
-      <div class="alert alert-warning" style="background-color: {{ colours.description.background }}; color: {{ colours.description.color }};">
-        <h6 class="fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i> Disclaimer</h6>
-        <p class="mb-0">{{disclaimer}}</p>
-        <div class="button-container">
-          <a href="{{report_link}}" class="report">Report</a>
-        </div>
+      <!-- Disclaimer -->
+      <div class="disclaimer-card">
+        <h6><i class="fa-solid fa-triangle-exclamation me-2"></i> Disclaimer</h6>
+        <p class="mb-2">{{disclaimer}}</p>
+        <a href="{{report_link}}" class="report-btn">
+          <i class="fa-solid fa-flag me-1"></i> Report
+        </a>
       </div>
-  </div>
-  </main>
-  <!-- Footer is now generated via JavaScript -->
+    </main>
   </div>
   
   <!-- External JS -->
   <script src="https://av-bo-tz.vercel.app/548/551/play.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      console.log("JS Loaded Successfully");
+      console.log("AV BOTz Player Loaded Successfully");
+      
+      // Initialize Plyr if available
+      if (typeof Plyr !== 'undefined') {
+        const player = new Plyr('#myVideo', {
+          controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+          settings: ['quality', 'speed'],
+        });
+      }
     });
   </script>
 </body>
 
-    </html>
+</html>
+

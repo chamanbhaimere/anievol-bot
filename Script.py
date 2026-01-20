@@ -1,7 +1,7 @@
 class script(object):
     START_TXT = """<b>Hᴇʏ {}, </b>\n\n<i>send me a file or add me as an admin to any channel to instantly generate file links.
 
-Add me to your channel to instantly generate links for any downloadable media. Once received, I will automatically attach appropriate buttons to the post containing the URL.</i>\n\n<blockquote><a href=https://t.me/{}?startchannel&admin=post_messages+edit_messages+delete_messages>➜ 𝖠𝖽𝖽 𝖳𝗈 𝖢𝗁𝖺𝗇𝗇𝖾𝗅</a></blockquote>"""
+Add me to your channel to instantly generate links for any downloadable media. Once received, I will automatically attach appropriate buttons to the post containing the URL.</i>\n\n<blockquote><a href=https://t.me/{}?startchannel&admin=post_messages+edit_messages+delete_messages>➜ 𝖠𝖽𝖽 𝖳𝗈 𝖢𝗁𝖺𝗇𝗇𝖾ʟ</a></blockquote>"""
 
     RESTART_TXT = """
 <b>Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ !
@@ -128,8 +128,8 @@ Nᴀᴍᴇ - {}</b>"""
 <blockquote>🎖️ᴀᴠᴀɪʟᴀʙʟᴇ ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴꜱ :</blockquote>
 
  ❏ 𝟶𝟹𝟿₹    ➠    𝟶𝟷 ᴍᴏɴᴛʜ
- ❏ 𝟷𝟷𝟶₹    ➠    𝟶𝟹 ᴍᴏɴᴛʜ
- ❏ 𝟹𝟼𝟶₹    ➠    𝟷𝟸 ᴍᴏɴᴛʜ
+  ❏ 𝟷𝟷𝟶₹    ➠    𝟶𝟹 ᴍᴏɴᴛʜ
+  ❏ 𝟹𝟼𝟶₹    ➠    𝟷𝟸 ᴍᴏɴᴛʜ
 
 🆔 ᴜᴘɪ ɪᴅ ➩ <code>.......</code> [ᴛᴀᴘ ᴛᴏ ᴄᴏᴘʏ]
  
@@ -157,3 +157,12 @@ Nᴀᴍᴇ - {}</b>"""
 
 ⛽️ ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴀᴄᴛɪᴠᴇ ᴘʟᴀɴ: /myplan
 </b>"""
+
+    EMBED_TXT = """<b>🎬 Eᴍʙᴇᴅ Cᴏᴅᴇ Gᴇɴᴇʀᴀᴛᴇᴅ!</b>
+
+<b>📦 Fɪʟᴇ Nᴀᴍᴇ:</b> <code>{}</code>
+
+<b>🖥️ Iғʀᴀᴍᴇ Cᴏᴅᴇ:</b>
+<code>&lt;iframe src="{}" width="100%" height="100%" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;</code>
+
+<i>🔗 Yᴏᴜ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴅᴇ ᴛᴏ ᴇᴍʙᴇᴅ ᴛʜᴇ ᴠɪᴅᴇᴏ ᴏɴ ʏᴏᴜʀ ᴡᴇʙsɪᴛᴇ.</i>"""

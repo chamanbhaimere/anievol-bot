@@ -76,6 +76,7 @@ async def private_receive_handler(c: Client, m: Message):
                  InlineKeyboardButton("• ᴅᴏᴡɴʟᴏᴀᴅ •", url=download)],
                 [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇ •", url=file_link),
                  InlineKeyboardButton("• ꜱʜᴀʀᴇ•", url=share_link)],
+                [InlineKeyboardButton("• ᴇᴍʙᴇᴅ •", callback_data=f"get_embed_{forwarded.id}")],
                 [InlineKeyboardButton("• ᴅᴇʟᴇᴛᴇ ғɪʟᴇ •", callback_data=f"deletefile_{forwarded.id}"),
                  InlineKeyboardButton("• ᴄʟᴏꜱᴇ •", callback_data="close_data")]
             ])

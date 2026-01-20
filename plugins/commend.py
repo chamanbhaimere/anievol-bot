@@ -371,6 +371,20 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.answer("✅ Fɪʟᴇ ᴅᴇʟᴇᴛᴇᴅ ꜱᴜᴄᴄᴇꜱꜱғᴜʟʟʏ!", show_alert=True)
         await query.message.edit_text("🗑️ Fɪʟᴇ ʜᴀꜱ ʙᴇᴇɴ ᴅᴇʟᴇᴛᴇᴅ ꜱᴜᴄᴄᴇꜱꜱғᴜʟʟʏ.")
 	
+    elif query.data.startswith("get_embed_"):
+        file_id = int(query.data.split("_")[2])
+        msg = await client.get_messages(BIN_CHANNEL, file_id)
+        hash_str = get_hash(msg)
+        filename = (msg.document or msg.video or msg.audio).file_name or f"AV_File_{file_id}.mkv"
+        embed_url = f"{URL}watch/{file_id}/{filename}?hash={hash_str}"
+        await query.answer("🎬 Eᴍʙᴇᴅ Cᴏᴅᴇ Gᴇɴᴇʀᴀᴛᴇᴅ!", show_alert=False)
+        await client.send_message(
+            chat_id=query.from_user.id,
+            text=script.EMBED_TXT.format(filename, embed_url),
+            parse_mode=enums.ParseMode.HTML
+        )
+
+	
 
 @Client.on_message(filters.private & filters.command("files"))
 async def list_user_files(client, message: Message):

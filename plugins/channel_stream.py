@@ -50,7 +50,8 @@ async def channel_receive_handler(bot: Client, broadcast: Message):
         buttons_list = [
             [InlineKeyboardButton("• ꜱᴛʀᴇᴀᴍ •", url=stream),
              InlineKeyboardButton("• ᴅᴏᴡɴʟᴏᴀᴅ •", url=download)],
-            [InlineKeyboardButton('• ᴄʜᴇᴄᴋ ʜᴇʀᴇ ᴛᴏ ɢᴇᴛ ғɪʟᴇ •', url=file_link)]
+            [InlineKeyboardButton('• ᴄʜᴇᴄᴋ ʜᴇʀᴇ ᴛᴏ ɢᴇᴛ ғɪʟᴇ •', url=file_link)],
+            [InlineKeyboardButton("• ᴇᴍʙᴇᴅ •", callback_data=f"get_embed_{msg.id}")]
         ]
         if IS_SHORTLINK:
             buttons_list.append([

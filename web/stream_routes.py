@@ -28,6 +28,51 @@ async def root_route_handler(_):
         "version": __version__,
     })
 
+@routes.get(r"/watch/{id:\d+}/{filename}", allow_head=True)
+async def watch_file_handler(request: web.Request):
+    """Serve HTML player page for file-based URLs"""
+    try:
+        video_id = int(request.match_info["id"])
+        filename = request.match_info["filename"]
+        secure_hash = request.rel_url.query.get("hash", "")
+        
+        # Render the player page with file info
+        html_content = await render_page(video_id, secure_hash)
+        
+        # Create response with CORS headers for iframe embedding
+        response = web.Response(text=html_content, content_type="text/html")
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["X-Frame-Options"] = "ALLOWALL"
+        
+        return response
+    except InvalidHash as e:
+        raise web.HTTPForbidden(text=e.message)
+    except FIleNotFound as e:
+        raise web.HTTPNotFound(text=e.message)
+    except Exception as e:
+        logging.critical(f"Error in watch_file_handler: {e}")
+        return web.Response(status=500, text=str(e))
+
+@routes.get(r"/file/{id:\d+}/{filename}", allow_head=True)
+async def file_stream_handler(request: web.Request):
+    """Stream video file for file-based URLs with download support"""
+    try:
+        video_id = int(request.match_info["id"])
+        filename = request.match_info["filename"]
+        secure_hash = request.rel_url.query.get("hash", "")
+        download = request.rel_url.query.get("download", "0") == "1"
+        
+        # Stream the file
+        return await media_streamer(request, video_id, secure_hash, download)
+    except InvalidHash as e:
+        raise web.HTTPForbidden(text=e.message)
+    except FIleNotFound as e:
+        raise web.HTTPNotFound(text=e.message)
+    except Exception as e:
+        logging.critical(f"Error in file_stream_handler: {e}")
+        return web.Response(status=500, text=str(e))
+
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_watch_handler(request: web.Request):
     try:
@@ -74,7 +119,7 @@ async def stream_handler(request: web.Request):
         logging.critical(e)
         return web.Response(status=500, text=str(e))
 
-async def media_streamer(request: web.Request, id: int, secure_hash: str):
+async def media_streamer(request: web.Request, id: int, secure_hash: str, download: bool = False):
     range_header = request.headers.get("Range", None)
 
     index = min(work_loads, key=work_loads.get)
@@ -120,8 +165,17 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str):
     part_count = math.ceil(until_bytes / chunk_size) - math.floor(offset / chunk_size)
     req_length = until_bytes - from_bytes + 1
 
+    # Determine MIME type with better MKV support
     mime_type = file_id.mime_type or "application/octet-stream"
     file_name = file_id.file_name or f"{secrets.token_hex(2)}.bin"
+    
+    # Override MIME type for MKV files
+    if file_name.lower().endswith('.mkv'):
+        mime_type = 'video/x-matroska'
+    elif file_name.lower().endswith('.webm'):
+        mime_type = 'video/webm'
+    elif file_name.lower().endswith('.mp4'):
+        mime_type = 'video/mp4'
 
     response = web.StreamResponse(
         status=206 if range_header else 200,
@@ -130,8 +184,14 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str):
             "Content-Type": mime_type,
             "Content-Length": str(req_length),
             "Content-Range": f"bytes {from_bytes}-{until_bytes}/{file_size}",
-            "Content-Disposition": f'inline; filename="{file_name}"',
+            "Content-Disposition": f'attachment; filename="{file_name}"' if download else f'inline; filename="{file_name}"',
             "Accept-Ranges": "bytes",
+            # CORS headers to allow iframe embedding from React app
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Range, Content-Type",
+            # Allow iframe embedding
+            "X-Frame-Options": "ALLOWALL",
         }
     )
 
