@@ -48,7 +48,7 @@
 
     body {
       font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0a0a0a;
+      background: #050505;
       color: #fff;
       min-height: 100vh;
       overflow-x: hidden;
@@ -57,14 +57,14 @@
     /* Glassmorphism Styles */
     .glass {
       background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
     }
 
     .premium-header {
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: 25px 20px;
@@ -94,11 +94,11 @@
 
     .player-wrapper {
       margin-bottom: 30px;
-      border-radius: 16px;
+      border-radius: 20px;
       overflow: hidden;
       background: #000;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     video {
@@ -114,8 +114,8 @@
     }
 
     .btn-premium {
-      padding: 16px 24px;
-      border-radius: 12px;
+      padding: 18px 24px;
+      border-radius: 14px;
       font-size: 15px;
       font-weight: 600;
       text-decoration: none;
@@ -131,65 +131,67 @@
     .btn-mx,
     .btn-vlc,
     .btn-play {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.04);
       color: #fff;
     }
 
     .btn-download,
     .btn-telegram {
-      background: #fff;
-      color: #000;
-      border-color: #fff;
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
     }
 
     .btn-share {
       background: transparent;
-      border-color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
       color: #fff;
     }
 
     .btn-premium:hover {
       transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     }
 
     .btn-mx:hover,
     .btn-vlc:hover,
     .btn-play:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.4);
     }
 
     .btn-download:hover,
     .btn-telegram:hover {
-      background: #e0e0e0;
+      background: #f0f0f0;
+      transform: translateY(-5px) scale(1.02);
     }
 
     .btn-share:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.5);
     }
 
     .file-info-card,
     .disclaimer-card {
-      padding: 25px;
-      border-radius: 16px;
+      padding: 28px;
+      border-radius: 20px;
       margin-bottom: 25px;
     }
 
     .file-info-card h3 {
       font-size: 1.2rem;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .file-info-item {
       display: flex;
       justify-content: space-between;
-      padding: 12px 0;
+      padding: 14px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
@@ -198,13 +200,14 @@
     }
 
     .file-info-label {
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(255, 255, 255, 0.4);
       font-size: 0.9rem;
+      font-weight: 500;
     }
 
     .file-info-value {
       color: #fff;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.95rem;
     }
 
@@ -220,38 +223,66 @@
     }
 
     .disclaimer-text {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.5);
       font-size: 0.85rem;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .report-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: rgba(255, 0, 0, 0.1);
-      color: #ff4d4d;
-      border-radius: 8px;
+      margin-top: 18px;
+      padding: 12px 24px;
+      background: rgba(255, 50, 50, 0.1);
+      color: #ff5555;
+      border-radius: 10px;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.9rem;
-      border: 1px solid rgba(255, 0, 0, 0.2);
-      transition: all 0.3s;
+      border: 1px solid rgba(255, 50, 50, 0.15);
+      transition: all 0.3s ease;
     }
 
     .report-btn:hover {
-      background: rgba(255, 0, 0, 0.2);
-      color: #ff4d4d;
+      background: rgba(255, 50, 50, 0.2);
+      transform: scale(1.05);
     }
 
-    /* Custom Plyr Theme (Monochrome) */
+    /* Custom Plyr Theme - Final Polish */
     :root {
       --plyr-color-main: #ffffff;
-      --plyr-video-background: #000;
-      --plyr-menu-background: rgba(20, 20, 20, 0.9);
-      --plyr-menu-color: #fff;
+      --plyr-video-control-background-hover: rgba(255, 255, 255, 0.1);
+      --plyr-video-control-color: #ffffff;
+      --plyr-video-controls-background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
+      --plyr-menu-background: rgba(15, 15, 15, 0.95);
+      --plyr-menu-color: #ffffff;
+      --plyr-tooltip-background: rgba(255, 255, 255, 0.9);
+      --plyr-tooltip-color: #000;
+      --plyr-range-thumb-height: 14px;
+      --plyr-range-track-height: 4px;
+    }
+
+    .plyr--video .plyr__controls {
+      padding: 20px 15px 15px !important;
+    }
+
+    .plyr__control--overlaid {
+      background: rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(5px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .plyr__control:hover {
+      background: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    /* Remove blocky backgrounds from SVG buttons */
+    .plyr__control.plyr__tab-focus,
+    .plyr__control:focus,
+    .plyr__control:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #fff !important;
     }
 
     @media (max-width: 768px) {
@@ -260,9 +291,20 @@
       }
 
       .container {
-        padding: 20px 15px;
+        padding: 25px 15px;
       }
     }
+  </style>
+
+  @media (max-width: 768px) {
+  .premium-header h1 {
+  font-size: 1.4rem;
+  }
+
+  .container {
+  padding: 20px 15px;
+  }
+  }
   </style>
 </head>
 
