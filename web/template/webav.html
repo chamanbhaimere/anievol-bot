@@ -48,156 +48,219 @@
 
     body {
       font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #1a1a1a;
+      background: #0a0a0a;
       color: #fff;
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Glassmorphism Styles */
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
 
     .premium-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 25px 20px;
       text-align: center;
-      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
     .premium-header h1 {
-      font-size: 2rem;
-      font-weight: 700;
+      font-size: 1.8rem;
+      font-weight: 800;
       margin: 0;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      letter-spacing: -0.5px;
+      background: linear-gradient(180deg, #fff 0%, #aaa 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 30px 20px;
+    }
+
+    .player-wrapper {
+      margin-bottom: 30px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     video {
       width: 100%;
-      max-width: 100%;
-      border-radius: 12px;
-      background: #000;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      display: block;
     }
 
     .buttons-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
     }
 
     .btn-premium {
-      padding: 15px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 15px;
       font-weight: 600;
-      cursor: pointer;
       text-decoration: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      gap: 10px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .btn-premium:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-mx {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    .btn-vlc {
-      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-      color: white;
-    }
-
+    /* Monochrome Theme */
+    .btn-mx,
+    .btn-vlc,
     .btn-play {
-      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-      color: white;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
     }
 
-    .btn-download {
-      background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-      color: white;
-    }
-
+    .btn-download,
     .btn-telegram {
-      background: linear-gradient(135deg, #0088cc 0%, #0077b5 100%);
-      color: white;
+      background: #fff;
+      color: #000;
+      border-color: #fff;
     }
 
     .btn-share {
-      background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-      color: white;
+      background: transparent;
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
     }
 
-    .file-info-card {
-      background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    .btn-premium:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-mx:hover,
+    .btn-vlc:hover,
+    .btn-play:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-download:hover,
+    .btn-telegram:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-share:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .file-info-card,
+    .disclaimer-card {
+      padding: 25px;
+      border-radius: 16px;
+      margin-bottom: 25px;
     }
 
     .file-info-card h3 {
-      margin-bottom: 15px;
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .file-info-card p {
-      color: #a0aec0;
-      margin: 8px 0;
+    .file-info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .file-info-item:last-child {
+      border-bottom: none;
+    }
+
+    .file-info-label {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+    }
+
+    .file-info-value {
+      color: #fff;
+      font-weight: 500;
       font-size: 0.95rem;
     }
 
     .disclaimer-card {
-      background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
-      padding: 20px;
-      border-radius: 12px;
-      color: #1a202c;
-      box-shadow: 0 4px 16px rgba(246, 173, 85, 0.3);
+      background: rgba(255, 255, 255, 0.02);
     }
 
     .disclaimer-card h6 {
       font-weight: 700;
-      margin-bottom: 10px;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    .disclaimer-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      line-height: 1.6;
     }
 
     .report-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 16px;
-      background: #1a202c;
-      color: #fff;
-      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: rgba(255, 0, 0, 0.1);
+      color: #ff4d4d;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
-      transition: all 0.2s;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255, 0, 0, 0.2);
+      transition: all 0.3s;
     }
 
     .report-btn:hover {
-      background: #2d3748;
-      color: #fff;
-      transform: translateY(-1px);
+      background: rgba(255, 0, 0, 0.2);
+      color: #ff4d4d;
+    }
+
+    /* Custom Plyr Theme (Monochrome) */
+    :root {
+      --plyr-color-main: #ffffff;
+      --plyr-video-background: #000;
+      --plyr-menu-background: rgba(20, 20, 20, 0.9);
+      --plyr-menu-color: #fff;
     }
 
     @media (max-width: 768px) {
       .premium-header h1 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
 
-      .buttons-grid {
-        grid-template-columns: 1fr;
+      .container {
+        padding: 20px 15px;
       }
     }
   </style>
@@ -214,7 +277,7 @@
     <main class="flex-grow-1 container">
       <!-- Video Player -->
       <div class="player-wrapper">
-        <video id="myVideo" src="{{file_url}}" controls crossorigin="anonymous">
+        <video id="myVideo" src="{{file_url}}" playsinline controls crossorigin="anonymous">
           Your browser does not support the video tag.
         </video>
         <script src="https://cdn.plyr.io/3.6.12/plyr.js"></script>
@@ -222,13 +285,13 @@
 
       <!-- Player Selection Buttons -->
       <div class="buttons-grid buttons">
-        <a onclick="mx_player()" class="btn-premium btn-mx">
+        <a onclick="mx_player()" class="btn-premium btn-mx glass">
           <i class="fa fa-play"></i> MX Player
         </a>
-        <a onclick="vlc_player()" class="btn-premium btn-vlc">
+        <a onclick="vlc_player()" class="btn-premium btn-vlc glass">
           <i class="fa fa-play"></i> VLC Player
         </a>
-        <a onclick="playit_player()" class="btn-premium btn-play">
+        <a onclick="playit_player()" class="btn-premium btn-play glass">
           <i class="fa fa-play"></i> Play It
         </a>
       </div>
@@ -236,32 +299,41 @@
       <!-- Download & Share Buttons -->
       <div class="buttons-grid buttons">
         <a onclick="streamDownload()" class="btn-premium btn-download">
-          <i class="fa-solid fa-download"></i> Download
+          <i class="fa-solid fa-download"></i> Download Video
         </a>
-        <a onclick="shareButton()" class="btn-premium btn-share">
+        <a onclick="shareButton()" class="btn-premium btn-share glass">
           <i class="fa fa-share-alt"></i> Share Now
         </a>
       </div>
 
       <!-- Telegram Button -->
-      <a id="demo4" onclick="showLinkModal('{{tg_button}}')" class="btn-premium btn-telegram w-100 mb-3 buttons">
+      <a id="demo4" onclick="showLinkModal('{{tg_button}}')" class="btn-premium btn-telegram w-100 mb-4 buttons">
         <i class="fa-brands fa-telegram"></i> Create Link Like This
       </a>
 
       <!-- File Information -->
-      <div class="file-info-card file-info">
-        <h3><i class="fa-solid fa-circle-info me-2"></i> File Information</h3>
-        <p><strong>Name:</strong> {{file_name}}</p>
-        <p><strong>Size:</strong> {{file_size}}</p>
-        <p><strong>Type:</strong> Video File</p>
+      <div class="file-info-card file-info glass">
+        <h3><i class="fa-solid fa-circle-info"></i> File Details</h3>
+        <div class="file-info-item">
+          <span class="file-info-label">File Name</span>
+          <span class="file-info-value">{{file_name}}</span>
+        </div>
+        <div class="file-info-item">
+          <span class="file-info-label">File Size</span>
+          <span class="file-info-value">{{file_size}}</span>
+        </div>
+        <div class="file-info-item">
+          <span class="file-info-label">Format</span>
+          <span class="file-info-value">{{file_extension | upper}}</span>
+        </div>
       </div>
 
       <!-- Disclaimer -->
-      <div class="disclaimer-card file-info">
-        <h6><i class="fa-solid fa-triangle-exclamation me-2"></i> Disclaimer</h6>
-        <p class="mb-2">{{disclaimer}}</p>
+      <div class="disclaimer-card file-info glass">
+        <h6><i class="fa-solid fa-triangle-exclamation"></i> Content Policy</h6>
+        <p class="disclaimer-text">{{disclaimer}}</p>
         <a href="{{report_link}}" class="report-btn">
-          <i class="fa-solid fa-flag me-1"></i> Report
+          <i class="fa-solid fa-flag"></i> Report Content
         </a>
       </div>
     </main>
