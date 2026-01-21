@@ -1,6 +1,7 @@
-import os, sys, glob, pytz, asyncio, logging, importlib
+import os, sys, glob, pytz, asyncio, logging, importlib, time
 from pathlib import Path
 from pyrogram import idle
+from pyrogram.errors import FloodWait
 
 #Dont Remove My Credit @AV_BOTz_UPDATE 
 #This Repo Is By @BOT_OWNER26 
@@ -30,7 +31,16 @@ from web.server.clients import initialize_clients
 
 ppath = "plugins/*.py"
 files = glob.glob(ppath)
-Webavbot.start()
+
+print("Starting Bot...")
+while True:
+    try:
+        Webavbot.start()
+        break
+    except FloodWait as e:
+        print(f"FloodWait: {e.value} seconds. Sleeping...")
+        time.sleep(e.value)
+
 loop = asyncio.get_event_loop()
 
 async def start():
