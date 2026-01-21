@@ -79,6 +79,7 @@ async def render_page(id: str, secure_hash: str, src: str = None, is_embed: bool
         file_name=file_name,
         file_url=src,
         file_size=file_size,
+        file_extension=file_data.file_name.split(".")[-1].lower() if file_data.file_name else "mkv",
         file_unique_id=file_data.unique_id,
         template_ne=avbotz_template.NAME,
         disclaimer=avbotz_template.DISCLAIMER,

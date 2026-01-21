@@ -196,6 +196,10 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str, downlo
         mime_type = 'video/webm'
     elif file_name.lower().endswith('.mp4'):
         mime_type = 'video/mp4'
+    elif file_name.lower().endswith('.m3u8'):
+        mime_type = 'application/x-mpegURL'
+    elif file_name.lower().endswith('.ts'):
+        mime_type = 'video/MP2T'
 
     response = web.StreamResponse(
         status=206 if range_header else 200,
