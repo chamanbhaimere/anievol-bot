@@ -31,13 +31,20 @@ async def root_route_handler(_):
 @routes.get(r"/watch/{id:\d+}/{filename}", allow_head=True)
 async def watch_file_handler(request: web.Request):
     """Serve HTML player page for file-based URLs"""
+    return await render_watch_response(request, is_embed=False)
+
+@routes.get(r"/embed/{id:\d+}/{filename}", allow_head=True)
+async def embed_file_handler(request: web.Request):
+    """Serve minimalist embed player for file-based URLs"""
+    return await render_watch_response(request, is_embed=True)
+
+async def render_watch_response(request: web.Request, is_embed: bool):
     try:
         video_id = int(request.match_info["id"])
-        filename = request.match_info["filename"]
         secure_hash = request.rel_url.query.get("hash", "")
         
         # Render the player page with file info
-        html_content = await render_page(video_id, secure_hash)
+        html_content = await render_page(video_id, secure_hash, is_embed=is_embed)
         
         # Create response with CORS headers for iframe embedding
         response = web.Response(text=html_content, content_type="text/html")
@@ -51,7 +58,7 @@ async def watch_file_handler(request: web.Request):
     except FIleNotFound as e:
         raise web.HTTPNotFound(text=e.message)
     except Exception as e:
-        logging.critical(f"Error in watch_file_handler: {e}")
+        logging.critical(f"Error in render_watch_response: {e}")
         return web.Response(status=500, text=str(e))
 
 @routes.get(r"/file/{id:\d+}/{filename}", allow_head=True)
@@ -75,6 +82,13 @@ async def file_stream_handler(request: web.Request):
 
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_watch_handler(request: web.Request):
+    return await render_stream_response(request, is_embed=False)
+
+@routes.get(r"/embed/{path:\S+}", allow_head=True)
+async def stream_embed_handler(request: web.Request):
+    return await render_stream_response(request, is_embed=True)
+
+async def render_stream_response(request: web.Request, is_embed: bool):
     try:
         path = request.match_info["path"]
         match = re.search(r"^([a-zA-Z0-9_-]{6})(\d+)$", path)
@@ -84,9 +98,15 @@ async def stream_watch_handler(request: web.Request):
         else:
             id = int(re.search(r"(\d+)(?:\/\S+)?", path).group(1))
             secure_hash = request.rel_url.query.get("hash")
-        return web.Response(
-            text=await render_page(id, secure_hash), content_type="text/html"
-        )
+            
+        html_content = await render_page(id, secure_hash, is_embed=is_embed)
+        
+        response = web.Response(text=html_content, content_type="text/html")
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["X-Frame-Options"] = "ALLOWALL"
+        
+        return response
     except InvalidHash as e:
         raise web.HTTPForbidden(text=e.message)
     except FIleNotFound as e:

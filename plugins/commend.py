@@ -376,7 +376,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         msg = await client.get_messages(BIN_CHANNEL, file_id)
         hash_str = get_hash(msg)
         filename = (msg.document or msg.video or msg.audio).file_name or f"AV_File_{file_id}.mkv"
-        embed_url = f"{URL}watch/{file_id}/{filename}?hash={hash_str}"
+        embed_url = f"{URL}embed/{file_id}/{filename}?hash={hash_str}"
         await query.answer("🎬 Eᴍʙᴇᴅ Cᴏᴅᴇ Gᴇɴᴇʀᴀᴛᴇᴅ!", show_alert=False)
         await client.send_message(
             chat_id=query.from_user.id,
