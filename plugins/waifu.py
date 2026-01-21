@@ -1,7 +1,8 @@
 import aiohttp
 import logging
+from typing import Union
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
 
 # API Endpoint
 WAIFU_API_URL = "https://api.waifu.im/search"
@@ -84,7 +85,7 @@ async def fetch_and_send_waifu(message: Union[Message, CallbackQuery], included_
                         
                         if is_callback:
                             await message.edit_message_media(
-                                media=dict(type="photo", media=image_url, caption=caption),
+                                media=InputMediaPhoto(media=image_url, caption=caption),
                                 reply_markup=buttons
                             )
                         else:
