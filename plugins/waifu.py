@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
 import logging
+import io
 from typing import Union
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
@@ -91,17 +92,37 @@ async def fetch_and_send_waifu(client: Client, message: Union[Message, CallbackQ
                         caption = f"<b>✨ Random Waifu ✨</b>\n\n<b>Tags:</b> <code>{tags_str}</code>"
                         
                         if is_callback:
-                            await message.edit_message_media(
-                                media=InputMediaPhoto(media=image_url, caption=caption),
-                                reply_markup=buttons
-                            )
-                            # Schedule deletion for the edited message
-                            asyncio.create_task(auto_delete_msg(message.message, WAIFU_DELETE_TIME))
+                            # Use byte stream even for edits to avoid WEBPAGE_MEDIA_EMPTY
+                            async with session.get(image_url) as img_resp:
+                                if img_resp.status == 200:
+                                    img_data = await img_resp.read()
+                                    photo = io.BytesIO(img_data)
+                                    photo.name = image_url.split("/")[-1]
+                                    
+                                    await message.edit_message_media(
+                                        media=InputMediaPhoto(media=photo, caption=caption),
+                                        reply_markup=buttons
+                                    )
+                                    asyncio.create_task(auto_delete_msg(message.message, WAIFU_DELETE_TIME))
+                                else:
+                                    await message.answer(f"❌ Failed to download (HTTP {img_resp.status})", show_alert=True)
                         else:
-                            sent = await target.reply_photo(photo=image_url, caption=caption, reply_markup=buttons)
-                            await status_msg.delete()
-                            # Schedule deletion for the new photo
-                            asyncio.create_task(auto_delete_msg(sent, WAIFU_DELETE_TIME))
+                            # For new messages, use byte stream to avoid WEBPAGE_MEDIA_EMPTY
+                            async with session.get(image_url) as img_resp:
+                                if img_resp.status == 200:
+                                    img_data = await img_resp.read()
+                                    photo = io.BytesIO(img_data)
+                                    photo.name = image_url.split("/")[-1]
+                                    
+                                    sent = await target.reply_photo(
+                                        photo=photo,
+                                        caption=caption,
+                                        reply_markup=buttons
+                                    )
+                                    await status_msg.delete()
+                                    asyncio.create_task(auto_delete_msg(sent, WAIFU_DELETE_TIME))
+                                else:
+                                    await status_msg.edit(f"<b>❌ Failed to download image (HTTP {img_resp.status})</b>")
                     else:
                         error_text = "<b>❌ No images found for those tags!</b>"
                         if is_callback: await message.answer(error_text, show_alert=True)
