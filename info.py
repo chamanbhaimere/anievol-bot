@@ -77,6 +77,7 @@ SLEEP_THRESHOLD = int(getenv('SLEEP_THRESHOLD', '60'))  # Threshold for sleep de
 RATE_LIMIT_TIMEOUT = int(environ.get("RATE_LIMIT_TIMEOUT", "600"))  # Rate limit time (10 mins)
 MAX_FILES = int(environ.get("MAX_FILES", "5"))  # Max files allowed per user
 VERIFY_EXPIRE = int(environ.get('VERIFY_EXPIRE', 60))  # Time (in hours) after which verification expires
+WAIFU_DELETE_TIME = int(environ.get('WAIFU_DELETE_TIME', 60))  # Auto-delete waifu images after 60s
 
 # ⚙️ Worker Configuration
 WORKERS = int(getenv('WORKERS', '4'))  # Number of async workers

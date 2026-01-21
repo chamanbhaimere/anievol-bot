@@ -1,8 +1,10 @@
 import aiohttp
+import asyncio
 import logging
 from typing import Union
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
+from info import WAIFU_DELETE_TIME
 
 # API Endpoint
 WAIFU_API_URL = "https://api.waifu.im/search"
@@ -89,8 +91,16 @@ async def fetch_and_send_waifu(message: Union[Message, CallbackQuery], included_
                                 reply_markup=buttons
                             )
                         else:
-                            await target.reply_photo(photo=image_url, caption=caption, reply_markup=buttons)
+                            sent = await target.reply_photo(photo=image_url, caption=caption, reply_markup=buttons)
                             await status_msg.delete()
+                            # Auto-delete background task
+                            async def auto_delete():
+                                await asyncio.sleep(WAIFU_DELETE_TIME)
+                                try:
+                                    await sent.delete()
+                                except:
+                                    pass
+                            asyncio.create_task(auto_delete())
                     else:
                         error_text = "<b>❌ No images found for those tags!</b>"
                         if is_callback: await message.answer(error_text, show_alert=True)
