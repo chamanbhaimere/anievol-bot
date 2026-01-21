@@ -101,6 +101,8 @@ Nᴀᴍᴇ - {}</b>"""
 
 <b>📥 Download : </b> <code>{}</code>
 
+<b>🔗 Embed    : </b> <code>{}</code>
+
 <b>🚸 Nᴏᴛᴇ : LINK WON'T EXPIRE TILL I DELETE 🤡</b>"""
 
     VERIFICATION_TEXT = """<b>👋 ʜᴇʏ {},
@@ -164,5 +166,8 @@ Nᴀᴍᴇ - {}</b>"""
 
 <b>🖥️ Iғʀᴀᴍᴇ Cᴏᴅᴇ:</b>
 <code>&lt;iframe src="{}" width="100%" height="100%" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;</code>
+
+<b>🔗 Direct Link:</b>
+<code>{}</code>
 
 <i>🔗 Yᴏᴜ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴅᴇ ᴛᴏ ᴇᴍʙᴇᴅ ᴛʜᴇ ᴠɪᴅᴇᴏ ᴏɴ ʏᴏᴜʀ ᴡᴇʙsɪᴛᴇ.</i>"""

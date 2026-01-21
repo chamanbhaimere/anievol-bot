@@ -62,6 +62,8 @@ async def private_receive_handler(c: Client, m: Message):
             "timestamp": time.time()
         })
 
+        embed_url = f"{stream}&minimal=true"
+
         await forwarded.reply_text(
             f"Requested By: [{m.from_user.first_name}](tg://user?id={user_id})\nUser ID: {user_id}\nStream Link: {stream}",
             disable_web_page_preview=True,
@@ -69,7 +71,7 @@ async def private_receive_handler(c: Client, m: Message):
         )
 
         await m.reply_text(
-            script.CAPTION_TXT.format(CHANNEL, file_name, file_size, stream, download),
+            script.CAPTION_TXT.format(CHANNEL, file_name, file_size, stream, download, embed_url),
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ꜱᴛʀᴇᴀᴍ •", url=stream),

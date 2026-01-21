@@ -44,7 +44,7 @@ async def render_watch_response(request: web.Request, is_embed: bool):
         secure_hash = request.rel_url.query.get("hash", "")
         
         # Render the player page with file info
-        html_content = await render_page(video_id, secure_hash, is_embed=is_embed)
+        html_content = await render_page(video_id, secure_hash, request=request, is_embed=is_embed)
         
         # Create response with CORS headers for iframe embedding
         response = web.Response(text=html_content, content_type="text/html")
@@ -99,7 +99,7 @@ async def render_stream_response(request: web.Request, is_embed: bool):
             id = int(re.search(r"(\d+)(?:\/\S+)?", path).group(1))
             secure_hash = request.rel_url.query.get("hash")
             
-        html_content = await render_page(id, secure_hash, is_embed=is_embed)
+        html_content = await render_page(id, secure_hash, request=request, is_embed=is_embed)
         
         response = web.Response(text=html_content, content_type="text/html")
         response.headers["Access-Control-Allow-Origin"] = "*"

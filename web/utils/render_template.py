@@ -15,7 +15,7 @@ from web.server.exceptions import InvalidHash
 # This Repo Is By @BOT_OWNER26 
 # For Any Kind Of Error Ask Us In Support Group @AV_SUPPORT_GROUP
 
-async def render_page(id: str, secure_hash: str, src: str = None, is_embed: bool = False) -> str:
+async def render_page(id: str, secure_hash: str, request: aiohttp.web.Request = None, src: str = None, is_embed: bool = False) -> str:
     # Step 1: Fetch Telegram file and metadata
     try:
         file = await Webavbot.get_messages(int(BIN_CHANNEL), int(id))
@@ -85,6 +85,8 @@ async def render_page(id: str, secure_hash: str, src: str = None, is_embed: bool
         disclaimer=avbotz_template.DISCLAIMER,
         report_link=avbotz_template.REPORT_LINK,
         colours=avbotz_template.COLOURS,
+        request=request,
+        args=request.query if request else {},
                                     )
 # Dont Remove My Credit @AV_BOTz_UPDATE 
 # This Repo Is By @BOT_OWNER26 
