@@ -9,31 +9,35 @@ from info import WAIFU_DELETE_TIME
 # API Endpoint
 WAIFU_API_URL = "https://api.waifu.im/search"
 
-# Available SFW Tags (Hardcoded for performance, can be fetched dynamically but better as static menu)
+# Available SFW Tags
 SFW_TAGS = [
     "maid", "waifu", "marin-kitagawa", 
     "mori-calliope", "raiden-shogun", "oppai", 
     "selfies", "uniform", "kamisato-ayaka"
 ]
 
+async def auto_delete_msg(message: Message, delay: int):
+    """Helper to delete a message after a delay"""
+    await asyncio.sleep(delay)
+    try:
+        await message.delete()
+    except Exception as e:
+        logging.debug(f"Auto-delete failed: {e}")
+
 @Client.on_message(filters.command("waifu") & filters.incoming)
 async def get_waifu(client: Client, message: Message):
-    """
-    Fetch a random anime image from waifu.im
-    Usage: /waifu [tag] OR /waifu tags
-    """
     args = message.text.split(maxsplit=1)
     
     if len(args) > 1 and args[1].lower() == "tags":
-        return await show_tag_menu(message)
+        return await show_tag_menu(client, message)
 
     included_tags = []
     if len(args) > 1:
         included_tags = [tag.strip().lower() for tag in args[1].split(",")]
 
-    await fetch_and_send_waifu(message, included_tags)
+    await fetch_and_send_waifu(client, message, included_tags)
 
-async def show_tag_menu(message: Message):
+async def show_tag_menu(client: Client, message: Message):
     """Show interactive tag selection menu"""
     buttons = []
     row = []
@@ -45,20 +49,21 @@ async def show_tag_menu(message: Message):
     if row:
         buttons.append(row)
     
-    buttons.append([InlineKeyboardButton("🎲 Random Waifu", callback_data="regen_waifu")])
+    buttons.append([InlineKeyboardButton("🎲 Random Waifu", callback_data="regen_waifu_random")])
     
-    await message.reply_text(
+    menu_msg = await message.reply_text(
         "<b>🎨 Select a Tag to Generate Image:</b>",
         reply_markup=InlineKeyboardMarkup(buttons)
     )
+    # Delete menu after delay if no interaction
+    asyncio.create_task(auto_delete_msg(menu_msg, WAIFU_DELETE_TIME))
 
-async def fetch_and_send_waifu(message: Union[Message, CallbackQuery], included_tags=None, is_callback=False):
+async def fetch_and_send_waifu(client: Client, message: Union[Message, CallbackQuery], included_tags=None, is_callback=False):
     """Helper to fetch and send image"""
     params = {"is_nsfw": "false"}
     if included_tags:
         params["included_tags"] = included_tags
 
-    # If it's a callback, we update the message; if it's a new command, we send a new one
     target = message if not is_callback else message.message
     
     if not is_callback:
@@ -90,17 +95,13 @@ async def fetch_and_send_waifu(message: Union[Message, CallbackQuery], included_
                                 media=InputMediaPhoto(media=image_url, caption=caption),
                                 reply_markup=buttons
                             )
+                            # Schedule deletion for the edited message
+                            asyncio.create_task(auto_delete_msg(message.message, WAIFU_DELETE_TIME))
                         else:
                             sent = await target.reply_photo(photo=image_url, caption=caption, reply_markup=buttons)
                             await status_msg.delete()
-                            # Auto-delete background task
-                            async def auto_delete():
-                                await asyncio.sleep(WAIFU_DELETE_TIME)
-                                try:
-                                    await sent.delete()
-                                except:
-                                    pass
-                            asyncio.create_task(auto_delete())
+                            # Schedule deletion for the new photo
+                            asyncio.create_task(auto_delete_msg(sent, WAIFU_DELETE_TIME))
                     else:
                         error_text = "<b>❌ No images found for those tags!</b>"
                         if is_callback: await message.answer(error_text, show_alert=True)
@@ -119,12 +120,12 @@ async def fetch_and_send_waifu(message: Union[Message, CallbackQuery], included_
 async def regen_waifu_specific_callback(client: Client, query: CallbackQuery):
     tag = query.data.split("_")[-1]
     included_tags = [tag] if tag != "random" else None
-    await fetch_and_send_waifu(query, included_tags, is_callback=True)
+    await fetch_and_send_waifu(client, query, included_tags, is_callback=True)
 
 @Client.on_callback_query(filters.regex("^tagwaifu_"))
 async def tag_waifu_callback(client: Client, query: CallbackQuery):
     tag = query.data.split("_")[1]
-    await fetch_and_send_waifu(query, [tag], is_callback=True)
+    await fetch_and_send_waifu(client, query, [tag], is_callback=True)
 
 @Client.on_callback_query(filters.regex("^waifu_tag_menu$"))
 async def waifu_tag_menu_callback(client: Client, query: CallbackQuery):
@@ -144,3 +145,5 @@ async def waifu_tag_menu_callback(client: Client, query: CallbackQuery):
         caption="<b>🎨 Select a Tag to Generate Image:</b>",
         reply_markup=InlineKeyboardMarkup(buttons)
     )
+    # Reset auto-delete for the menu
+    asyncio.create_task(auto_delete_msg(query.message, WAIFU_DELETE_TIME))
