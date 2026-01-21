@@ -4,7 +4,7 @@ import logging
 import io
 from typing import Union
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from info import WAIFU_DELETE_TIME
 
 # API Endpoint
@@ -19,6 +19,8 @@ SFW_TAGS = [
 
 async def auto_delete_msg(message: Message, delay: int):
     """Helper to delete a message after a delay"""
+    if not message or not delay:
+        return
     await asyncio.sleep(delay)
     try:
         await message.delete()
@@ -55,33 +57,29 @@ async def show_tag_menu(client: Client, message: Union[Message, CallbackQuery]):
     text = "<b>🎨 Select a Tag to Generate Image:</b>"
     reply_markup = InlineKeyboardMarkup(buttons)
 
+    # Always send a new message for consistency and delete the old one if it was a callback
     if isinstance(message, CallbackQuery):
-        # Answer callback to stop loading spinner
         await message.answer()
-        # If the original was a photo, we must delete it and send a new text message
-        if message.message.photo:
-            try: await message.message.delete()
-            except: pass
-            menu_msg = await message.message.reply_text(text, reply_markup=reply_markup)
-        else:
-            menu_msg = await message.edit_message_text(text, reply_markup=reply_markup)
+        try: await message.message.delete()
+        except: pass
+        menu_msg = await message.message.reply_text(text, reply_markup=reply_markup)
     else:
         menu_msg = await message.reply_text(text, reply_markup=reply_markup)
     
-    # Delete menu after delay if no interaction
+    # Schedule auto-delete
     asyncio.create_task(auto_delete_msg(menu_msg, WAIFU_DELETE_TIME))
 
-async def fetch_and_send_waifu(client: Client, message: Union[Message, CallbackQuery], included_tags=None, is_callback=False):
-    """Helper to fetch and send image"""
+async def fetch_and_send_waifu(client: Client, message: Union[Message, CallbackQuery], included_tags=None):
+    """Helper to fetch and send image using delete-and-resend for maximum reliability"""
     params = {"is_nsfw": "false"}
     if included_tags:
         params["included_tags"] = included_tags
 
-    query = message if is_callback else None
-    target = query.message if is_callback else message
+    is_callback = isinstance(message, CallbackQuery)
+    target = message.message if is_callback else message
     
     if is_callback:
-        await query.answer("Generating...")
+        await message.answer("Generating...")
     else:
         status_msg = await target.reply_text("<b>Generating image... 🎨</b>")
 
@@ -111,52 +109,51 @@ async def fetch_and_send_waifu(client: Client, message: Union[Message, CallbackQ
                                 photo = io.BytesIO(img_data)
                                 photo.name = image_url.split("/")[-1]
                                 
+                                # If it's a callback, delete the old message (photo or menu)
                                 if is_callback:
-                                    # If the message is already a photo, we can edit it
-                                    if target.photo:
-                                        await query.edit_message_media(
-                                            media=InputMediaPhoto(media=photo, caption=caption),
-                                            reply_markup=buttons
-                                        )
-                                        asyncio.create_task(auto_delete_msg(target, WAIFU_DELETE_TIME))
-                                    else:
-                                        # If it's a text message (likely the menu), we must delete and send a new photo
-                                        try: await target.delete()
-                                        except: pass
-                                        sent = await target.reply_photo(photo=photo, caption=caption, reply_markup=buttons)
-                                        asyncio.create_task(auto_delete_msg(sent, WAIFU_DELETE_TIME))
-                                else:
-                                    sent = await target.reply_photo(photo=photo, caption=caption, reply_markup=buttons)
-                                    await status_msg.delete()
-                                    asyncio.create_task(auto_delete_msg(sent, WAIFU_DELETE_TIME))
+                                    try: await target.delete()
+                                    except: pass
+                                
+                                # Send new photo
+                                sent = await target.reply_photo(photo=photo, caption=caption, reply_markup=buttons)
+                                
+                                # Clean up status message if it exists
+                                if not is_callback:
+                                    try: await status_msg.delete()
+                                    except: pass
+                                
+                                # Schedule auto-delete for the new photo
+                                asyncio.create_task(auto_delete_msg(sent, WAIFU_DELETE_TIME))
                             else:
-                                err = f"<b>❌ Failed to download image (HTTP {img_resp.status})</b>"
-                                if is_callback: await query.answer(err, show_alert=True)
-                                else: await status_msg.edit(err)
+                                err_text = f"<b>❌ Failed to download (HTTP {img_resp.status})</b>"
+                                if is_callback: await message.answer(err_text, show_alert=True)
+                                else: await status_msg.edit(err_text)
                     else:
-                        err = "<b>❌ No images found for those tags!</b>"
-                        if is_callback: await query.answer(err, show_alert=True)
-                        else: await status_msg.edit(err)
+                        err_text = "<b>❌ No images found for those tags!</b>"
+                        if is_callback: await message.answer(err_text, show_alert=True)
+                        else: await status_msg.edit(err_text)
                 else:
-                    err = f"<b>❌ API Error: {response.status}</b>"
-                    if is_callback: await query.answer(err, show_alert=True)
-                    else: await status_msg.edit(err)
+                    err_text = f"<b>❌ API Error: {response.status}</b>"
+                    if is_callback: await message.answer(err_text, show_alert=True)
+                    else: await status_msg.edit(err_text)
     except Exception as e:
         logging.error(f"Error fetching waifu: {e}")
-        err = f"<b>❌ Error:</b> <code>{str(e)}</code>"
-        if is_callback: await query.answer(err, show_alert=True)
-        else: await status_msg.edit(err)
+        err_text = f"<b>❌ Critical Error:</b> <code>{str(e)}</code>"
+        if is_callback: await message.answer(err_text, show_alert=True)
+        else:
+            try: await status_msg.edit(err_text)
+            except: await target.reply_text(err_text)
 
 @Client.on_callback_query(filters.regex("^regen_waifu_"))
 async def regen_waifu_specific_callback(client: Client, query: CallbackQuery):
     tag = query.data.split("_")[-1]
     included_tags = [tag] if tag != "random" else None
-    await fetch_and_send_waifu(client, query, included_tags, is_callback=True)
+    await fetch_and_send_waifu(client, query, included_tags)
 
 @Client.on_callback_query(filters.regex("^tagwaifu_"))
 async def tag_waifu_callback(client: Client, query: CallbackQuery):
     tag = query.data.split("_")[1]
-    await fetch_and_send_waifu(client, query, [tag], is_callback=True)
+    await fetch_and_send_waifu(client, query, [tag])
 
 @Client.on_callback_query(filters.regex("^waifu_tag_menu$"))
 async def waifu_tag_menu_callback(client: Client, query: CallbackQuery):
